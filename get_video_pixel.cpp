@@ -1,3 +1,11 @@
+/*
+ * Name: get_video_pixel
+ * Description: Take a snapshot of a video and get the RGB value
+ *	of any pixel in the snapshot.
+ * Author: Najam Syed (github.com/nrsyed)
+ * Created: 2018-Feb-12
+ */
+
 #include <iostream>
 #include <string>
 #include <opencv2/opencv.hpp>
@@ -19,8 +27,8 @@ void on_mouse_click(int event, int x, int y, int flags, void* ptr) {
 		std::string rgbText = "[" + std::to_string(r) + ", " + std::to_string(g)
 			+ ", " + std::to_string(b) + "]";
 
-		// stackoverflow.com/questions/1855884/determine-font-color-based-on-background-color
-		float luminance = 1 - (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+		// From stackoverflow.com/questions/1855884/determine-font-color-based-on-background-color
+		float luminance = 1 - (0.299*r + 0.587*g + 0.114*b) / 255;
 		cv::Scalar textColor;
 		if (luminance < 0.5) {
 			textColor = cv::Scalar(0,0,0);
@@ -44,10 +52,9 @@ int main(int argc, char** argv) {
 		return -1;
 	}
 
-	cv::Mat frame;
+	cv::Mat frame, snapshot, colorArray;
 	capture.read(frame);
 
-	cv::Mat snapshot, colorArray;
 	snapshot = cv::Mat(frame.size(), CV_8UC3, cv::Scalar(0,0,0));
 	cv::imshow("Snapshot", snapshot);
 
