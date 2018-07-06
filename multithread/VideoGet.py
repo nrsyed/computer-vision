@@ -4,7 +4,7 @@ import cv2
 class VideoGet:
     """
     Class that continuously gets frames from a VideoCapture object
-    with a dedicated thread..
+    with a dedicated thread.
     """
 
     def __init__(self, src=0):

@@ -1,8 +1,8 @@
 import argparse
 import cv2
 from CountsPerSec import CountsPerSec
-from VideoShow import VideoShow
 from VideoGet import VideoGet
+from VideoShow import VideoShow
 
 def putIterationsPerSec(frame, iterations_per_sec):
     """
