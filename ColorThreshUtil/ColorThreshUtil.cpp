@@ -2,8 +2,9 @@
 ColorThreshUtil.cpp
 
 @author: Najam R Syed
-@version: 1.0
+@version: 1.1
 Date: 2018-05-24
+Modified: 2018-07-10 (1.1) - added option to select camera at runtime
 
 Description:
     @brief
@@ -47,9 +48,15 @@ Description:
 
 Usage:
 
-    Run without arguments to start in webcam mode:
+    Run without arguments to start in webcam mode with default source "0":
     @code
         $: ./ColorThreshUtil
+    @endcode
+
+    Run with the "-c" option followed by an integer representing a camera
+    index to start in camera mode using the given camera:
+    @code
+        $: ./ColorThreshUtil -c 1
     @endcode
 
     Run with the "-v" option followed by a filename to start in video mode:
@@ -113,7 +120,7 @@ public:
     int ch0LowVal, ch0HighVal, ch1LowVal, ch1HighVal, ch2LowVal, ch2HighVal;
     int colorSpace;
     Mode mode;
-    std::string file;
+    std::string source; // image or video source
 
     //! Update controls window clickable 'button' to display name of
     //! current color space.
@@ -212,16 +219,17 @@ public:
     void start() {
         //! Load image or open VideoCapture and start thresholding routine.
         if (mode == IMAGE) {
-            img = cv::imread(file);
+            img = cv::imread(source);
             cv::imshow(IM_WIN, img);
             thresholdImage();
             cv::waitKey(0);
         } else {
             cv::VideoCapture cap;
             if (mode == VIDEO) {
-                cap.open(file);
+                cap.open(source);
             } else {
-                cap.open(0);
+                // If CAM mode, convert camera index string to int.
+                cap.open(std::stoi(source, nullptr, 10));
             }
 
             if (!cap.isOpened()) {
@@ -242,7 +250,7 @@ public:
         }
     }
 
-    ColorThreshold(Mode mode=CAM, std::string file="") {
+    ColorThreshold(Mode mode=CAM, std::string source="0") {
         ch0LowVal = PIXEL_MIN;
         ch0HighVal = PIXEL_MAX;
         ch1LowVal = PIXEL_MIN;
@@ -254,7 +262,7 @@ public:
         cv::namedWindow(THRESH_WIN);
         btn = cv::Mat(50, 400, CV_8UC3, cv::Scalar(BTN_HUE, BTN_HUE, BTN_HUE));
         this->mode = mode;
-        this->file = file;
+        this->source = source;
 
         //! Create trackbars. Note that we must pass 'this' pointer to
         //! static member functions.
@@ -280,19 +288,22 @@ public:
 
 int main(int argc, char **argv) {
     Mode mode;
-    std::string filename;
+    std::string source;
     if (argc == 3 && strcmp(argv[1], "-i") == 0) {
         mode = IMAGE;
-        filename = argv[2];
+        source = argv[2];
     } else if (argc == 3 && strcmp(argv[1], "-v") == 0) {
         mode = VIDEO;
-        filename = argv[2];
+        source = argv[2];
+    } else if (argc == 3 && strcmp(argv[1], "-c") == 0) {
+        mode = CAM;
+        source = argv[2];
     } else {
         mode = CAM;
-        filename = "";
+        source = "0";
     }
 
-    ColorThreshold c(mode, filename);
+    ColorThreshold c(mode, source);
     c.start();
     return 0;
 }
