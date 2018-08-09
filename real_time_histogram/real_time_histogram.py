@@ -47,13 +47,14 @@ ax.set_ylabel('Frequency')
 lw = 3
 alpha = 0.5
 if color == 'rgb':
-    lineR, = ax.plot(np.arange(bins), np.zeros((bins,)), c='r', lw=lw, alpha=alpha)
-    lineG, = ax.plot(np.arange(bins), np.zeros((bins,)), c='g', lw=lw, alpha=alpha)
-    lineB, = ax.plot(np.arange(bins), np.zeros((bins,)), c='b', lw=lw, alpha=alpha)
+    lineR, = ax.plot(np.arange(bins), np.zeros((bins,)), c='r', lw=lw, alpha=alpha, label='Red')
+    lineG, = ax.plot(np.arange(bins), np.zeros((bins,)), c='g', lw=lw, alpha=alpha, label='Green')
+    lineB, = ax.plot(np.arange(bins), np.zeros((bins,)), c='b', lw=lw, alpha=alpha, label='Blue')
 else:
-    lineGray, = ax.plot(np.arange(bins), np.zeros((bins,1)), c='k', lw=lw)
+    lineGray, = ax.plot(np.arange(bins), np.zeros((bins,1)), c='k', lw=lw, label='intensity')
 ax.set_xlim(0, bins-1)
 ax.set_ylim(0, 1)
+ax.legend()
 plt.ion()
 plt.show()
 
