@@ -17,7 +17,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument('-f', '--file',
     help='Path to video file (if not using camera)')
 parser.add_argument('-c', '--color', type=str, default='gray',
-    help='Color space: "gray" (default) or "rgb"')
+    help='Color space: "gray" (default), "rgb", or "lab"')
 parser.add_argument('-b', '--bins', type=int, default=16,
     help='Number of bins per channel (default 16)')
 parser.add_argument('-w', '--width', type=int, default=0,
@@ -38,6 +38,8 @@ resizeWidth = args['width']
 fig, ax = plt.subplots()
 if color == 'rgb':
     ax.set_title('Histogram (RGB)')
+elif color == 'lab':
+    ax.set_title('Histogram (L*a*b*)')
 else:
     ax.set_title('Histogram (grayscale)')
 ax.set_xlabel('Bin')
@@ -47,13 +49,18 @@ ax.set_ylabel('Frequency')
 lw = 3
 alpha = 0.5
 if color == 'rgb':
-    lineR, = ax.plot(np.arange(bins), np.zeros((bins,)), c='r', lw=lw, alpha=alpha)
-    lineG, = ax.plot(np.arange(bins), np.zeros((bins,)), c='g', lw=lw, alpha=alpha)
-    lineB, = ax.plot(np.arange(bins), np.zeros((bins,)), c='b', lw=lw, alpha=alpha)
+    lineR, = ax.plot(np.arange(bins), np.zeros((bins,)), c='r', lw=lw, alpha=alpha, label='Red')
+    lineG, = ax.plot(np.arange(bins), np.zeros((bins,)), c='g', lw=lw, alpha=alpha, label='Green')
+    lineB, = ax.plot(np.arange(bins), np.zeros((bins,)), c='b', lw=lw, alpha=alpha, label='Blue')
+elif color == 'lab':
+    lineL, = ax.plot(np.arange(bins), np.zeros((bins,)), c='k', lw=lw, alpha=alpha, label='L*')
+    lineA, = ax.plot(np.arange(bins), np.zeros((bins,)), c='b', lw=lw, alpha=alpha, label='a*')
+    lineB, = ax.plot(np.arange(bins), np.zeros((bins,)), c='y', lw=lw, alpha=alpha, label='b*')
 else:
-    lineGray, = ax.plot(np.arange(bins), np.zeros((bins,1)), c='k', lw=lw)
+    lineGray, = ax.plot(np.arange(bins), np.zeros((bins,1)), c='k', lw=lw, label='intensity')
 ax.set_xlim(0, bins-1)
 ax.set_ylim(0, 1)
+ax.legend()
 plt.ion()
 plt.show()
 
@@ -81,6 +88,16 @@ while True:
         histogramB = cv2.calcHist([b], [0], None, [bins], [0, 255]) / numPixels
         lineR.set_ydata(histogramR)
         lineG.set_ydata(histogramG)
+        lineB.set_ydata(histogramB)
+    elif color == 'lab':
+        cv2.imshow('L*a*b*', frame)
+        lab = cv2.cvtColor(frame, cv2.COLOR_BGR2LAB)
+        (l, a, b) = cv2.split(lab)
+        histogramL = cv2.calcHist([l], [0], None, [bins], [0, 255]) / numPixels
+        histogramA = cv2.calcHist([a], [0], None, [bins], [0, 255]) / numPixels
+        histogramB = cv2.calcHist([b], [0], None, [bins], [0, 255]) / numPixels
+        lineL.set_ydata(histogramL)
+        lineA.set_ydata(histogramA)
         lineB.set_ydata(histogramB)
     else:
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
