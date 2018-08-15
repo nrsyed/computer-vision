@@ -4,7 +4,17 @@ import numpy as np
 import cv2
 
 class ColorThreshold:
-    def __init__(self, mode="cam", source=""):
+    CV_COLOR_CODES = OrderedDict((
+        ("BGR", None),
+        ("GRAY", cv2.COLOR_BGR2GRAY),
+        ("HSV", cv2.COLOR_BGR2HSV),
+        ("Lab", cv2.COLOR_BGR2Lab),
+        ("Luv", cv2.COLOR_BGR2Luv),
+        ("YCrCb", cv2.COLOR_BGR2YCrCb),
+        ("YUV", cv2.COLOR_BGR2YUV)
+        ))
+
+    def __init__(self, mode="cam", source=0):
         self.PIXEL_MIN = 0
         self.PIXEL_MAX = 255
         self.BTN_HUE = 127
@@ -13,18 +23,9 @@ class ColorThreshold:
         self.THRESH_WIN = "Thresholded"
         self.IM_WIN = "Original"
 
-        self.CV_COLOR_CODES = OrderedDict((
-            ("BGR", None),
-            ("GRAY", cv2.COLOR_BGR2GRAY),
-            ("HSV", cv2.COLOR_BGR2HSV),
-            ("Lab", cv2.COLOR_BGR2Lab),
-            ("Luv", cv2.COLOR_BGR2Luv),
-            ("YCrCb", cv2.COLOR_BGR2YCrCb),
-            ("YUV", cv2.COLOR_BGR2YUV)
-            ))
 
         self.COLOR_SPACES = [key for key, code in
-            self.CV_COLOR_CODES.items()]
+            ColorThreshold.CV_COLOR_CODES.items()]
 
         self.colorSpaceIdx = 0
 
@@ -73,21 +74,18 @@ class ColorThreshold:
         cv2.imshow(self.CTRL_WIN, btnWithText)
 
     def onTrackbar(self, val):
-        # There seem to be issues with trackbars in OpenCV-Python.
-        # Each trackbar's linked variable is not updated when the
-        # trackbar position changes. One way to address this might
-        # have been to update the value from the callback function,
-        # which would require a separate callback function for each
-        # trackbar (since trackbar name/info is not passed to the
-        # callback on trackbar change).
-        # However, this didn't work either--it seems in Python,
-        # multiple trackbars in the same window all call back to the
-        # callback function for the last defined trackbar (in this
-        # case, the one corresponding to ch2HighVal), regardless of
-        # the callback function passed to each of the other trackbars.
+        # OpenCV-Python seems to have issues with trackbars. Each trackbar's
+        # linked variable is not updated when the trackbar position changes.
+        # Creating a separate callback function for each trackbar (since a
+        # reference to the trackbar is not passed to the callback function)
+        # doesn't help. Seems when multiple trackbars are defined in the same
+        # window, all trackbars call back to the callback function for the 
+        # last defined trackbar (in this case, the one corresponding to
+        # ch2HighVal), regardless of which callback function was passed to them.
         #
-        # Hence, we explicitly query each trackbar by name below to
-        # update all values on any trackbar change.
+        # Hence, I've opted to explicitly query each trackbar by name on any
+        # trackbar change, regardless of which one was changed.
+
         self.ch0LowVal = cv2.getTrackbarPos("Ch0 Low", self.CTRL_WIN)
         self.ch0HighVal = cv2.getTrackbarPos("Ch0 High", self.CTRL_WIN)
         self.ch1LowVal = cv2.getTrackbarPos("Ch1 Low", self.CTRL_WIN)
@@ -168,7 +166,21 @@ class ColorThreshold:
                 
                 cv2.imshow(self.IM_WIN, self.img)
                 self.thresholdImage()
-                
+        cv2.destroyAllWindows()
+
+    def getValues(self):
+        colorSpaceName = self.COLOR_SPACES[self.colorSpaceIdx]
+        channelValues = {
+            "colorSpaceName": colorSpaceName,
+            "ch0Low": self.ch0LowVal,
+            "ch0High": self.ch0HighVal,
+            "ch1Low": self.ch1LowVal,
+            "ch1High": self.ch1HighVal,
+            "ch2Low": self.ch2LowVal,
+            "ch2High": self.ch2HighVal
+            }
+        return channelValues
+        
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--image", "-i", type=str, default=None,
