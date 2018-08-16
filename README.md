@@ -1,6 +1,6 @@
 # Computer vision utilities
 
-This repo contains a number of computer vision–related utilities I've made. They rely primarily on OpenCV and are written in both C++ and/or Python. Brief descriptions of the following utilities and programs, as well as links to more detailed information, can be found in the sections below.
+This repo contains a number of computer vision–related utilities I've made. They rely primarily on OpenCV and are written in C++ and/or Python. Brief descriptions of the following utilities and programs, as well as links to more detailed information, can be found in the sections below.
 
 * [Multi-channel color thresholding](#multi-channel-color-thresholding)
 * [Multithreaded video stream read/display](#multithreaded-video-stream-readdisplay)
@@ -9,12 +9,13 @@ This repo contains a number of computer vision–related utilities I've made. Th
 * [Real time color histogram](#real-time-color-histogram)
 
 ## Multi-channel color thresholding
-C++: [ColorThreshUtil.cpp](https://github.com/nrsyed/computer-vision/blob/master/ColorThreshUtil/ColorThreshUtil.cpp)
+C++: [colorthresh.cpp](https://github.com/nrsyed/computer-vision/blob/master/ColorThreshUtil/colorthresh.cpp)
 
-Python: [ColorThreshUtil.py](https://github.com/nrsyed/computer-vision/blob/master/ColorThreshUtil/ColorThreshUtil.py)
+Python: [colorthresh.py](https://github.com/nrsyed/computer-vision/blob/master/ColorThreshUtil/colorthresh.py)
 
-*TODO*
+Use this simple OpenCV tool to determine the range of color channel values needed to isolate objects of a certain color. Can be used in real time with a camera, video file, or image file. See the [README](ColorThreshUtil/README.md) for the utility for more information, or [watch a demo of the utility in action on YouTube](https://youtu.be/YGzXznbvyNU).
 
+![Color thresholding utility demo](ColorThreshUtil/images/colorthresh_screenshot.png)
 
 ## Multithreaded video stream read/display
 Python: [thread_demo.py](https://github.com/nrsyed/computer-vision/blob/master/multithread/thread_demo.py), [VideoGet.py](https://github.com/nrsyed/computer-vision/blob/master/multithread/VideoGet.py), [VideoShow.py](https://github.com/nrsyed/computer-vision/blob/master/multithread/VideoShow.py), [CountsPerSec.py](https://github.com/nrsyed/computer-vision/blob/master/multithread/CountsPerSec.py)
