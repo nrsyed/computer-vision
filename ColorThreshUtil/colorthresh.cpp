@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <vector>
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
@@ -174,6 +175,15 @@ public:
             }
         }
     }
+
+	void getValues(std::vector<int>& channelValues) {
+		channelValues.push_back(ch0LowVal);
+		channelValues.push_back(ch0HighVal);
+		channelValues.push_back(ch1LowVal);
+		channelValues.push_back(ch1HighVal);
+		channelValues.push_back(ch2LowVal);
+		channelValues.push_back(ch2HighVal);
+	}
 
     ColorThreshold(Mode mode=CAM, std::string source="0") {
         ch0LowVal = PIXEL_MIN;
