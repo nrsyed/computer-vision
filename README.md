@@ -58,7 +58,7 @@ This utility allows you to take a snapshot of a webcam video feed, then left-cli
 
 Python: [real_time_histogram.py](real_time_histogram/real_time_histogram.py)
 
-This Python utility displays 3-channel RGB color histograms or a 1-channel grayscale histogram of a video stream with a matplotlib plot. The video stream can come from either a camera or a video file. For more detailed information and a demonstration, see [this blog post](https://nrsyed.com/2018/02/08/real-time-video-histograms-with-opencv-and-python/) and a [video of the script output on YouTube](https://www.youtube.com/watch?v=iv60xgjGOvg).
+This Python utility displays 3-channel RGB or Lab color histograms or a 1-channel grayscale histogram of a video stream, using a matplotlib plot. The video stream can come from either a camera or a video file. For more detailed information and a demonstration, see [this blog post](https://nrsyed.com/2018/02/08/real-time-video-histograms-with-opencv-and-python/) and a [video of the script output on YouTube](https://www.youtube.com/watch?v=iv60xgjGOvg).
 
 ![RGB histograms](images/rgb_histogram.jpg)
 
