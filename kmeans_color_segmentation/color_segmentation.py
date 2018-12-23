@@ -98,10 +98,9 @@ cv2.imshow('Original vs clustered', concatImage)
 
 if args['output_file']:
     # Construct timestamped output filename and write image to disk.
-    dt = datetime.datetime.now()
     fileExtension = args['output_format']
-    filename = (str(dt.year) + str(dt.month) + str(dt.day) + str(dt.hour)
-        + str(dt.minute) + str(dt.second) + colorSpace + '_c' + args['channels']
-        + 'n' + str(numClusters) + '.' + fileExtension)
+    filename = (datetime.datetime.now().strftime("%Y%m%d%H%M%S")
+        + colorSpace + '_c' + args['channels'] + 'n' + str(numClusters) + '.'
+        + fileExtension)
     cv2.imwrite(filename, concatImage)
 cv2.waitKey(0)
