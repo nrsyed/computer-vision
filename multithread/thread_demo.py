@@ -1,4 +1,5 @@
 import argparse
+import os
 import cv2
 from CountsPerSec import CountsPerSec
 from VideoGet import VideoGet
@@ -20,7 +21,7 @@ def noThreading(source=0):
     cps = CountsPerSec().start()
 
     while True:
-        (grabbed, frame) = cap.read()
+        grabbed, frame = cap.read()
         if not grabbed or cv2.waitKey(1) == ord("q"):
             break
 
@@ -102,6 +103,16 @@ def main():
             + " (video read and video show in their own threads),"
             + " none (default--no multithreading)")
     args = vars(ap.parse_args())
+
+    # If source is a string consisting only of integers, check that it doesn't
+    # refer to a file. If it doesn't, assume it's an integer camera ID and
+    # convert to int.
+    if (
+        isinstance(args["source"], str)
+        and args["source"].isdigit()
+        and not os.path.isfile(args["source"])
+    ):
+        args["source"] = int(args["source"])
 
     if args["thread"] == "both":
         threadBoth(args["source"])
